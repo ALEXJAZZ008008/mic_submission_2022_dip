@@ -1,0 +1,121 @@
+\documentclass[10pt, twocolumn, twoside, letterpaper]{IEEEtran}
+\IEEEoverridecommandlockouts
+
+\usepackage[activate={true, nocompatibility}, final, tracking=true, kerning=true, spacing=true, factor=1100, stretch=10, shrink=10]{microtype}
+\linespread{0.9}
+
+% \makeatletter
+% \def\mycopyrightnotice{
+%   {\footnotesize
+%   \begin{minipage}{\textwidth}
+%   \centering
+%   978-1-6654-2113-3/21/\$31.00 \copyright2021 IEEE
+%   \end{minipage}
+%   }
+% }
+% \def\ps@IEEEtitlepagestyle{
+%   \def\@oddfoot{\mycopyrightnotice}
+%   \def\@evenfoot{}
+% }
+
+\ifCLASSINFOpdf
+   \usepackage[pdftex]{graphicx}
+\else
+   \usepackage[dvips]{graphicx}
+\fi
+
+\ifCLASSOPTIONcompsoc
+  \usepackage[caption=false, font=normalsize, labelfont=sf, textfont=sf]{subfig}
+\else
+  \usepackage[caption=false, font=footnotesize]{subfig}
+\fi
+
+\usepackage{amsmath}
+\usepackage{bm}
+\usepackage{amssymb}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{stfloats}
+\usepackage{url}
+\usepackage{siunitx}
+\usepackage{fancyref}
+
+\usepackage{geometry}
+\geometry{letterpaper, top=0.7in, bottom=0.7in, left=0.65in, right=0.65in}
+
+\input{glossary}
+
+\usepackage[style=ieee, doi=false, isbn=false, url=false, maxbibnames=1, minbibnames=1, maxcitenames=1, mincitenames=1, backend=biber, defernumbers=false]{biblatex}
+\addbibresource{./bibtex/bib/Biblio.bib}
+
+\AtEveryBibitem{\clearfield{month}}
+\AtEveryBibitem{\clearfield{day}}
+\AtEveryBibitem{\clearfield{volume}}
+\AtEveryBibitem{\clearfield{issue}}
+\AtEveryBibitem{\clearfield{pages}}
+\AtEveryBibitem{\clearfield{number}}
+\AtEveryBibitem{\clearfield{title}}
+\AtEveryBibitem{\clearfield{isbn}}
+\AtEveryBibitem{\clearfield{keywords}}
+\AtEveryBibitem{\clearfield{issn}}
+\AtEveryBibitem{\clearfield{journal}}
+
+\begin{document}
+
+\title{
+    \vspace{-0.5cm}
+
+    Pseudo-Bayesian DIP Denoising as a Preprocessing Step for Kinetic Modelling in Dynamic PET
+}
+
+\pagestyle{plain}
+\pagenumbering{gobble}
+
+\author{
+    \vspace{-0.3cm}
+    
+    \IEEEauthorblockN{
+        Alexander~C.~Whitehead~\IEEEauthorrefmark{1}~\IEEEauthorrefmark{2},
+        Kjell~Erlandsson~\IEEEauthorrefmark{1},
+        Ander~Biguri~\IEEEauthorrefmark{1},
+        Kuan-Hao~Su~\IEEEauthorrefmark{3},
+        Scott~D.~Wollenweber~\IEEEauthorrefmark{3},
+        Jamie~R.~McClelland~\IEEEauthorrefmark{2} and
+        Kris~Thielemans~\IEEEauthorrefmark{1}~\IEEEauthorrefmark{2}
+    }
+        
+    \IEEEauthorblockA{
+        \IEEEauthorrefmark{1}
+        \textit{Institute of Nuclear Medicine, University College London, UK}
+    }
+    \IEEEauthorblockA{
+        \IEEEauthorrefmark{2}
+        \textit{Centre for Medical Image Computing, University College London, UK}
+    }
+    \IEEEauthorblockA{
+        \IEEEauthorrefmark{3}
+        \textit{Molecular Imaging and Computed Tomography Engineering, GE Healthcare, USA}
+        \vspace{-0.5cm}
+    }
+
+    \thanks{This research was supported by GE Healthcare, the NIHR UCLH Biomedical Research Centre and the UCL EPSRC Centre for Doctoral Training in Intelligent, Integrated Imaging in Healthcare (i4health) grant (EP/L016478/1).}
+    \thanks{The software used was partly produced by the Computational Collaborative Project on Synergistic Biomedical Imaging, CCP SyneRBI, UK EPSRC grant (EP/T026693/1).}
+    \thanks{Jamie~R.~McClelland is supported by a Cancer Research UK Centres Network Accelerator Award grant (A21993) to the ART-NET consortium and a CRUK Multi-disciplinary grant (CRC 521).}
+    \thanks{(contact: \texttt{alexander.whitehead.18@ucl.ac.uk}).}
+}
+
+\maketitle
+\IEEEpeerreviewmaketitle
+
+\begin{abstract}
+    
+\end{abstract}
+
+\vspace{-0.5cm}
+
+\input{body}
+
+\AtNextBibliography{\small}
+\printbibliography
+
+\end{document}
