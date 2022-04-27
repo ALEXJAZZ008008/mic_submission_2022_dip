@@ -1,33 +1,56 @@
 \section{Introduction} \label{sec:introduction}
-    \IEEEPARstart{M}{otion}
+    \IEEEPARstart{M}{ost} \gls{ML} or \gls{NN} based methods, in general, rely upon a workflow where, a model is designed, trained with a set of data, validated on another and then this trained model is deployed and new predictions are made with it~\cite{Krose2011AnNetworks}. This is logical as the intention with \gls{NN} based methods is to treat them as a general function approximator~\cite{Krose2011AnNetworks}. This is where the function is determined by the relationship between the data used and the objective or loss function. However, recently, in the domain of image denoising or reconstruction the \gls{DIP} method has begun to receive attention due to its promising results as well as the fact that training and inference are performed independently on each new image~\cite{Ulyanov2018DeepPrior}. Because the \gls{DIP} method uses a fully convolutional architecture, it could be considered to be a custom learnt bank of, for instance, smoothing filters for each input. In order to prevent overfitting to noise the number of iterations used is imperative. The authors of the original \gls{DIP} paper argue that the method could be considered to be used to solve many inverse problems~\cite{Ulyanov2018DeepPrior}.
+    
+    For \gls{PET} there have been a number of adaptations of \gls{DIP}, for instance;~\cite{Gong2019PETPrior} represented one of the first applications of \gls{DIP} to \gls{PET}. Here, a standard U-Net is used as the network architecture and relatively high count, low motion brain scans are chosen to be denoised~\cite{Weng2015U-Net:Segmentation}. In~\cite{Hashimoto20214DNetwork} \gls{DIP} is extended to \gls{4D} dynamic \gls{PET}. To do this a standard U-Net has multiple output branches grafted onto it for each dynamic time point. As well as in the previously mentioned paper~\cite{Hashimoto2019DynamicDatasets} uses the original or static \gls{PET} acquisition as input to the network, rather than noise.~\cite{Yang2022SimultaneousPrior} represents a more recent extension of \gls{DIP} where multiple networks are used simultaneously.
+    
+    This work seeks to extend or simplify previous work in order to give a solution which can be used to denoise dynamic \gls{PET} data for the application of kinetic modelling. Firstly, of the upmost importance is the reduction of \gls{GPU} memory requirements. Because \gls{DIP} requires training at inference then the full amount of memory required for training is needed every time the method is used. To aid in clinical adoption a hard limit of requiring less than \SI{8.0}{\giga\byte} \gls{GPU} memory was imposed. Secondly, a stopping criteria other than total number of iterations is required. The stopping criteria should be flexible so as to allow the method to correct a wider variety of inputs. One method which could be used would be to look at a window of previous loss function values and exit when the gradient of this drops below a tolerance. To achieve this the loss function must be adapted so as to stop the network fitting to noise. Previously \gls{TV} has been incorporated in generic \gls{DIP} literature~\cite{Liu2019ImagePrior} but is yet to see the same adoption in \gls{PET} \gls{DIP}. Finally, because the output from this method is to be used in a further model fitting it may provide improved results to have a metric of the uncertainty in this method to pass to the next. Most ways to incorporate Bayesian inference include either increasing memory usage or execution time, however, in~\cite{Gal2015DropoutLearning} it is proposed to use dropout to approximate Bayesian inference by dropping feature maps during both training and inference. Furthermore, this work uses \gls{PET} data with a \gls{FOV} of the lung and liver, whereas most previous work using a \gls{FOV} of the head.
 
 % \vspace{-0.3cm}
 
 \section{Methods} \label{sec:methods}
     \subsection{XCAT Volume Generation} \label{sec:xcat_volume_generation}
+        \gls{XCAT}~\cite{Segars2010}
+        
+    % \vspace{-0.3cm}
+    
+    \subsection{PET Acquisition Simulation and Image Reconstruction} \label{sec:pet_acquisition_simulation_and_image_reconstruction}
+        \gls{PET} acquisitions were simulated (and reconstructed) using \gls{STIR}~\cite{Thielemans2012, Nikos2019} through \gls{SIRF}~\cite{Ovtchinnikov2017}
+        
+    % \vspace{-0.3cm}
+    
+    \subsection{Network Design and Execution} \label{sec:network_design_and_execution}
+        The network used was a modified U-Net~\cite{Weng2015U-Net:Segmentation} with seven down/upsampling stages. Each down or upsampling stage consisted of two convolutional layers (with two, four, eight, $16$, $32$, $64$ or $128$ channels depending on depth) followed by either a split strided convolution and maxpooling layer (with the result concatenated) or a trilinear upsampling layer. Edge padding, group normalisation~\cite{Wu2018GroupNormalization}, MISH activation~\cite{Misra2020Mish:Function} and spatial dropout were used with every convolutional layer. Data was edge padded to the nearest power of two and the input data had Gaussian noised summed to it. Both input and label data were standardised. \gls{MSE} and \gls{TV} were used as the loss function. AdamW~\cite{Loshchilov2017DecoupledRegularization} was used as an optimiser and training continued for all methods until the gradient of the loss function, over a window of previous results, reduced below a threshold. Parameters were tuned using a grid search.
+        
+        Two training regimes were explored, one where each time point was treated independently and another where the model weights were saved and then independently updated on each time point before the mean of the new models weights was taken for the next iteration.
+        
+    % \vspace{-0.3cm}
+    
+    \subsection{Kinetic Modelling} \label{sec:kinetic_modelling}
         
         
     % \vspace{-0.3cm}
     
     \subsection{Evaluation} \label{sec:evaluation}
+        In addition to the denoising performed in~\Fref{sec:network_design_and_execution}, data were also denoised using \gls{TV} as well as the \gls{DIP} method presented in~\cite{Gong2019PETPrior}.
         
+        Comparisons used included: 
 
 % \vspace{-0.3cm}
 
 \section{Results} \label{sec:results}
     % \begin{figure}
-        % \vspace{-0.0cm}
+        % \vspace{-0.3cm}
         
     %     \centering
         
-    %     \includegraphics[width=1.0\linewidth]{figures/visual_analysis.png}
+    %     \includegraphics[width=1.0\linewidth]{figures/test.png}
         
         % \vspace{-0.3cm}
         
     %     \captionsetup{singlelinecheck=false, justification=centering}
-    %     \caption{First column contains \gls{AC} \gls{MC} reconstructions and the second column contains the result of applying the final \gls{MC} on the original XCAT images (for easier assessment of the accuracy of the estimated \glss{DVF}); ungated static \gls{CT}, ungated \gls{AV-CCT}, pair-wise, pair-wise \gls{MM}, group-wise, group-wise \gls{MM}. Colour map ranges are consistent for all images in each column.}
+    %     \caption{caption.}
         
-    %     \label{fig:visual_analysis}
+    %     \label{fig:test}
         
         % \vspace{-0.3cm}
     % \end{figure}
@@ -39,3 +62,4 @@
 \section{Discussion and Conclusions} \label{sec:discussion_and_conclusions}
     
     
+    In the future, research will focus on the application of the method to domains other than dynamic \gls{PET}, where \gls{4D} data exists, such as \gls{MC}.
