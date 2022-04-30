@@ -47,6 +47,7 @@
 
 \usepackage[style=ieee, doi=false, isbn=false, url=false, maxbibnames=1, minbibnames=1, maxcitenames=1, mincitenames=1, backend=biber, defernumbers=false]{biblatex}
 \addbibresource{./bibtex/bib/Biblio.bib}
+\addbibresource{./bibtex/bib/extrabib.bib}
 
 \AtEveryBibitem{\clearfield{month}}
 \AtEveryBibitem{\clearfield{day}}
@@ -115,7 +116,11 @@
 
 \input{body}
 
-\AtNextBibliography{\small}
+\AtNextBibliography
+{
+    \scriptsize
+    % \small
+}
 \printbibliography
 
 \end{document}
