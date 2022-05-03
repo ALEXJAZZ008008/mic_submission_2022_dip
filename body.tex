@@ -7,54 +7,54 @@
     
     This work seeks to extend or simplify previous work in order to give a solution which can be used to denoise \gls{3D} dynamic \gls{PET} data for the application of kinetic modelling. Firstly, we reduced \gls{GPU} memory requirements. Because \gls{DIP} requires training at inference,  the full amount of memory is needed every time the method is used. To aid in clinical adoption a hard limit of requiring less than \SI{8.0}{\giga\byte} \gls{GPU} memory was imposed. Secondly, a stopping criteria other than total number of iterations is required. The stopping criteria should be flexible so as to allow the method to correct a wider variety of inputs. One method which could be used would be to look at a window of previous loss function values and exit when the gradient of this drops below a tolerance. To aid in achieving this, as well as to address weaknesses of the original \gls{DIP}, regularisation must be added to the loss function so as to stop the \gls{NN} fitting to noise. Previously \gls{TV} has been incorporated in generic \gls{DIP} literature~\cite{Liu2019ImagePrior} but has not been adopted in \gls{PET} \gls{DIP} yet. Finally, because the output from this method is to be used in a further model fitting it may provide improved results to have a metric of the uncertainty in the denoised images to pass to the next. Most ways to incorporate Bayesian inference include either increasing memory usage or execution time, however, in~\cite{Gal2015DropoutLearning} it is proposed to use dropout to approximate Bayesian inference by dropping connections/feature maps during both training and inference. Furthermore, this work uses \gls{PET} data with a \gls{FOV} of the lung and liver, whereas most previous work using a \gls{FOV} of the head.
 
-% \vspace{-0.3cm}
+% \vspace{-0.5cm}
 
 \section{Methods} \label{sec:methods}
     % \subsection{XCAT Volume Generation} \label{sec:xcat_volume_generation}
     %     \gls{XCAT}~\cite{Segars2010}
         
-    % \vspace{-0.3cm}
+    % \vspace{-0.5cm}
     
     \subsection{PET Acquisition Simulation and Image Reconstruction} \label{sec:pet_acquisition_simulation_and_image_reconstruction}
         A series of dynamic scans following the clinical \gls{DWB}-\gls{PET} protocol were generated using the \gls{XCAT} phantom~\cite{segars4DXCATPhantom2010}, assigning patient-derived kinetic parameters to $64$ tissues and $3$ tumours of \SI{1.0}{\centi\meter} diameter in the left lung, and $3$ tumours of \SI{2.5}{\centi\meter}, \SI{2.0}{\centi\meter} and \SI{1.0}{\centi\meter} diameter in the liver. An input function for \gls{18F-FDG} taken from \cite{langsjoEffectsSubanestheticKetamine2004} was used to simulate \glss{TAC} to create dynamic images.
-%KT some info here on timing
+% KT some info here on timing
 
         \gls{PET} acquisitions were simulated (and reconstructed) using \gls{STIR}~\cite{Thielemans2012} through \gls{SIRF}~\cite{Ovtchinnikov2017}. \gls{NTOF} sinogram data were simulated using resolution modelling (using a \SI{6.0}{\centi\meter} \gls{FWHM} Gaussian filter). Randoms and scatter were not included. Poisson noise was added corresponding to a total number of counts of XXX in time frame XXX.
 % KT some info above
 
         Finally, all data sets were reconstructed using $10$ iterations with $17$ subsets of \gls{OSEM}~\cite{Hudson1994}.
 
-    % \vspace{-0.3cm}
+    % \vspace{-0.5cm}
     
     \subsection{Network Design and Execution} \label{sec:network_design_and_execution}
         The \gls{NN} used was a modified U-Net~\cite{Weng2015U-Net:Segmentation} with seven down/upsampling stages. Each down or upsampling stage consisted of two convolutional layers (with two, four, eight, $16$, $32$, $64$ or $128$ channels depending on depth) followed by either a split strided convolution and maxpooling layer (with the result concatenated) or a trilinear upsampling layer. Edge padding, group normalisation~\cite{Wu2018GroupNormalization}, MISH activation~\cite{Misra2020Mish:Function} and spatial dropout were used with every convolutional layer. Data was edge padded to the nearest power of two and the input data had Gaussian noised summed to it. Both input and label data were standardised. \gls{MSE} and \gls{TV} were used as the loss function. AdamW~\cite{Loshchilov2017DecoupledRegularization} was used as an optimiser and training continued for all methods until the gradient of the loss function, over a window of previous results, reduced below a threshold. Parameters were tuned using a grid search.
         
         Two training regimes were explored, one where each time point was treated independently and another where the model weights were saved and then independently updated on each time point before the mean of the new models weights was taken for the next iteration.
         
-    % \vspace{-0.3cm}
+    % \vspace{-0.5cm}
     
     \subsection{Kinetic Modelling} \label{sec:kinetic_modelling}
         Indirect Patlak estimation was used to generate $K_i$ and intercept images \cite{patlak1983GraphicalEvaluationBloodtoBrain}. Uncertainty estimates were used XXX.
         
-    % \vspace{-0.3cm}
+    % \vspace{-0.5cm}
     
     \subsection{Evaluation} \label{sec:evaluation}
         In addition to the denoising performed in~\Fref{sec:network_design_and_execution}, data were also denoised using \gls{TV} as well as the \gls{DIP} method presented in~\cite{Gong2019PETPrior}.
         
         Comparisons used included: 
 
-% \vspace{-0.3cm}
+% \vspace{-0.5cm}
 
 \section{Results} \label{sec:results}
     % \begin{figure}
-        % \vspace{-0.3cm}
+        % \vspace{-0.5cm}
         
     %     \centering
     
     %     \includegraphics[width=1.0\linewidth]{figures/test.png}    
     %     \includegraphics[width=1.0\linewidth]{figures/test.png}
         
-        % \vspace{-0.3cm}
+        % \vspace{-0.5cm}
         
     %     \captionsetup{
     %     \scriptsize
@@ -63,12 +63,12 @@
         
     %     \label{fig:test}
         
-        % \vspace{-0.3cm}
+        % \vspace{-0.5cm}
     % \end{figure}
     
     
 
-% \vspace{-0.3cm}
+% \vspace{-0.5cm}
 
 \section{Discussion and Conclusions} \label{sec:discussion_and_conclusions}
     XXXSome discussion of results here.
