@@ -78,9 +78,9 @@
     \IEEEauthorblockN{
         Alexander~C.~Whitehead~\IEEEauthorrefmark{1}~\IEEEauthorrefmark{2},
         Kjell~Erlandsson~\IEEEauthorrefmark{1},
-        Ander~Biguri~\IEEEauthorrefmark{1},
-        % Kuan-Hao~Su~\IEEEauthorrefmark{3},
-        Scott~D.~Wollenweber~\IEEEauthorrefmark{3},
+        Ander~Biguri~\IEEEauthorrefmark{3},
+        % Kuan-Hao~Su~\IEEEauthorrefmark{4},
+        Scott~D.~Wollenweber~\IEEEauthorrefmark{4},
         Jamie~R.~McClelland~\IEEEauthorrefmark{2} and
         Kris~Thielemans~\IEEEauthorrefmark{1}~\IEEEauthorrefmark{2}
     }
@@ -95,6 +95,10 @@
     }
     \IEEEauthorblockA{
         \IEEEauthorrefmark{3}
+        \textit{Department of Applied Mathematics and Theoretical Physics, University of Cambridge, UK}
+    }
+    \IEEEauthorblockA{
+        \IEEEauthorrefmark{4}
         \textit{Molecular Imaging and Computed Tomography Engineering, GE Healthcare, USA}
         % \vspace{-0.75cm}
     }
@@ -109,7 +113,7 @@
 \IEEEpeerreviewmaketitle
 
 \begin{abstract}
-    
+    Noise (among other artefacts) could be considered to be the bane of PET. Often, it causes what could otherwise be a more simple problem to explode in complexity. Many methods have been proposed to alleviate the worst annoyances of noise, however, not many take into account the temporal nature of dynamically acquired PET. Here, we propose an adaption of a method, which has seen increasing attention in more traditional imaging denoising circles. Deep Image Prior exploits the initialisation of a carefully designed neural network, so as to treat it as a bank of custom filters, which are to be trained and used afresh on each new piece of data, independently. Deep Image Prior has seen adaptation to PET previously (including dynamic PET), however, many of these adaptations do not take into account the large memory requirements of the method. Additionally, most previous work does not address the main weakness of the Deep Image Prior, its stopping criteria. Here, we propose a method which is both memory efficient, and uses the gradient of the loss function as a stopping criteria. Additionally, we introduce such improvements as, to include a smoothing regularisation, incorporate a Bayesian approximation (using dropout), and prototype a training scheme by which the model is fit on all data simultaneously. To evaluate this, dynamic XCAT simulations have been produced, with a field of view of the lung and liver, containing hot lesions. The results of the new methods (along with total variation and the old Deep Image Prior) have been compared by; a visual analysis, SSIM, a comparison of time activity curve and profile, and SUV. Results indicate that the new methods potentially outperform the old methods, without increasing computation time, while reducing system requirements.
 \end{abstract}
 
 % \vspace{-0.5cm}

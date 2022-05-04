@@ -1,25 +1,20 @@
 \section{Introduction} \label{sec:introduction}
-    \IEEEPARstart{M}{ost} \gls{ML} or \gls{NN} based methods, in general, rely upon a workflow where a model is designed, trained with a set of data, validated on another and then this trained model is deployed and new predictions are made with it~\cite{Krose2011AnNetworks}. 
-    %This is logical as the intention with \gls{NN} based methods is to treat them as a general function approximator~\cite{Krose2011AnNetworks}. This is where the function is determined by the relationship between the data used and the objective or loss function. 
-    However, recently, in the domain of image denoising or reconstruction the \gls{DIP} method has  received attention due to its promising results as well as the fact that training and inference are performed independently on each new image~\cite{Ulyanov2018DeepPrior}. Because the \gls{DIP} method uses a fully convolutional architecture, it could be considered to be a custom learnt bank of, for instance, smoothing filters for each input. In order to prevent overfitting to noise the number of iterations used is imperative. The authors of the original \gls{DIP} paper argue that the method could be considered to be used to solve many inverse problems~\cite{Ulyanov2018DeepPrior}.
+    \IEEEPARstart{M}{ost} \gls{ML} or \gls{NN} based methods, rely upon a workflow where a model is designed, trained, validated, and deployed~\cite{Krose2011AnNetworks}.% This is logical as the intention with \gls{NN} based methods is to treat them as a general function approximator~\cite{Krose2011AnNetworks}. This is where the function is determined by the relationship between the data used and the objective or loss function. 
+    However, in the domain of image denoising, the \gls{DIP} method has received attention due to its promising results, and the fact that training and inference are performed independently on each new image~\cite{Ulyanov2018DeepPrior}. The \gls{DIP} method could be considered to be a custom learnt bank of filters for each input. In order to prevent overfitting, the number of iterations used is imperative.% The authors of the original \gls{DIP} paper argue that the method could be considered to be used to solve many inverse problems~\cite{Ulyanov2018DeepPrior}.
     
-    For \gls{PET} there have been a number of adaptations of \gls{DIP}, for instance;~\cite{Gong2019PETPrior} represented one of the first applications of \gls{DIP} to \gls{PET}. Here, a standard U-Net is used as the \gls{NN} architecture and relatively high count, low motion brain scans are chosen to be denoised~\cite{Weng2015U-Net:Segmentation}. In~\cite{Hashimoto20214DNetwork} \gls{DIP} is extended to \gls{4D} dynamic \gls{PET}. To do this a standard U-Net has multiple output branches grafted onto it for each dynamic time point. In the previously mentioned paper~\cite{Hashimoto2019DynamicDatasets} uses the original or static \gls{PET} acquisition as input to the \gls{NN}, rather than noise.~\cite{Yang2022SimultaneousPrior} represents a more recent extension of \gls{DIP} where multiple \glss{NN} are used simultaneously.
+    For \gls{PET}, there have been a number of adaptations of \gls{DIP}, for instance;~\cite{Gong2019PETPrior} represented one of the first applications of \gls{DIP} to \gls{PET}. Here, a U-Net is used, with relatively high count/low motion brain scans~\cite{Weng2015U-Net:Segmentation}. In~\cite{Hashimoto20214DNetwork} \gls{DIP} is extended to \gls{4D} dynamic \gls{PET}. To do this, multiple output branches are grafted onto the \gls{NN}, one for each dynamic time point.~\cite{Hashimoto2019DynamicDatasets} uses the original or static \gls{PET} acquisition as input to the \gls{NN}, rather than noise.~\cite{Yang2022SimultaneousPrior} represents a more recent extension of \gls{DIP}, where multiple \glss{NN} are used simultaneously.
     
-    This work seeks to extend or simplify previous work in order to give a solution which can be used to denoise \gls{3D} dynamic \gls{PET} data for the application of kinetic modelling. Firstly, we reduced \gls{GPU} memory requirements. Because \gls{DIP} requires training at inference,  the full amount of memory is needed every time the method is used. To aid in clinical adoption a hard limit of requiring less than \SI{8.0}{\giga\byte} \gls{GPU} memory was imposed. Secondly, a stopping criteria other than total number of iterations is required. The stopping criteria should be flexible so as to allow the method to correct a wider variety of inputs. One method which could be used would be to look at a window of previous loss function values and exit when the gradient of this drops below a tolerance. To aid in achieving this, as well as to address weaknesses of the original \gls{DIP}, regularisation must be added to the loss function so as to stop the \gls{NN} fitting to noise. Previously \gls{TV} has been incorporated in generic \gls{DIP} literature~\cite{Liu2019ImagePrior} but has not been adopted in \gls{PET} \gls{DIP} yet. Finally, because the output from this method is to be used in a further model fitting it may provide improved results to have a metric of the uncertainty in the denoised images to pass to the next. Most ways to incorporate Bayesian inference include either increasing memory usage or execution time, however, in~\cite{Gal2015DropoutLearning} it is proposed to use dropout to approximate Bayesian inference by dropping connections/feature maps during both training and inference. Furthermore, this work uses \gls{PET} data with a \gls{FOV} of the lung and liver, whereas most previous work using a \gls{FOV} of the head.
+    This work seeks to extend or simplify previous work, in order to give a solution, which can be used to denoise \gls{4D} dynamic \gls{PET} data, for the application of kinetic modelling. Firstly, we reduced \gls{GPU} memory requirements. Because \gls{DIP} requires training at inference, the full amount of memory is needed every time the method is used. To aid in clinical adoption, a hard limit of \SI{8.0}{\giga\byte} \gls{GPU} memory was imposed. Secondly, a more robust stopping criteria is required.% The stopping criteria should be flexible so as to allow the method to correct a wider variety of inputs. 
+    One method would be, to look at a window of previous loss function values, and exit, when the gradient of this drops below a tolerance. To aid in achieving this, as well as to address weaknesses of the original \gls{DIP}, regularisation must be added, so as to stop the \gls{NN} fitting to noise. Previously, \gls{TV} has been incorporated in generic \gls{DIP} literature~\cite{Liu2019ImagePrior}, but has not been adopted in \gls{PET} \gls{DIP}. Finally, because the output from this method is to be used in a further model fitting, it may provide improved results to have a metric of the uncertainty in the denoised images. Most ways to incorporate Bayesian inference include, either increasing memory usage, or execution time. However, in~\cite{Gal2015DropoutLearning} it is proposed to use dropout to approximate Bayesian inference. Furthermore, this work uses \gls{PET} data with a \gls{FOV} of the lung and liver, whereas most previous work using a \gls{FOV} of the head.
 
 % \vspace{-0.5cm}
 
 \section{Methods} \label{sec:methods}
-    % \subsection{XCAT Volume Generation} \label{sec:xcat_volume_generation}
-    %     \gls{XCAT}~\cite{Segars2010}
-        
-    % \vspace{-0.5cm}
-    
-    \subsection{PET Acquisition Simulation and Image Reconstruction} \label{sec:pet_acquisition_simulation_and_image_reconstruction}
-        A series of dynamic scans following the clinical \gls{DWB}-\gls{PET} protocol were generated using the \gls{XCAT} phantom~\cite{segars4DXCATPhantom2010}, assigning patient-derived kinetic parameters to $64$ tissues and $3$ tumours of \SI{1.0}{\centi\meter} diameter in the left lung, and $3$ tumours of \SI{2.5}{\centi\meter}, \SI{2.0}{\centi\meter} and \SI{1.0}{\centi\meter} diameter in the liver. An input function for \gls{18F-FDG} taken from \cite{langsjoEffectsSubanestheticKetamine2004} was used to simulate \glss{TAC} to create dynamic images.
+    \subsection{\gls{PET} Acquisition Simulation and Image Reconstruction} \label{sec:pet_acquisition_simulation_and_image_reconstruction}
+        A series of dynamic scans, following the clinical \gls{DWB}-\gls{PET} protocol, were generated using the \gls{XCAT} phantom~\cite{segars4DXCATPhantom2010}. Assigned patient-derived kinetic parameters to, $64$ tissues, three tumours of \SI{1.0}{\centi\meter} diameter in the left lung, and three tumours of \SI{2.5}{\centi\meter}, \SI{2.0}{\centi\meter} and \SI{1.0}{\centi\meter} diameter in the liver. An input function for \gls{18F-FDG}, taken from \cite{langsjoEffectsSubanestheticKetamine2004}, was used to simulate \glss{TAC} to create dynamic images.
 % KT some info here on timing
 
-        \gls{PET} acquisitions were simulated (and reconstructed) using \gls{STIR}~\cite{Thielemans2012} through \gls{SIRF}~\cite{Ovtchinnikov2017}. \gls{NTOF} sinogram data were simulated using resolution modelling (using a \SI{6.0}{\centi\meter} \gls{FWHM} Gaussian filter). Randoms and scatter were not included. Poisson noise was added corresponding to a total number of counts of XXX in time frame XXX.
+        \gls{PET} acquisitions were simulated (and reconstructed) using \gls{STIR}~\cite{Thielemans2012} through \gls{SIRF}~\cite{Ovtchinnikov2017}. \gls{NTOF} sinogram data were simulated, using resolution modelling (using a \SI{6.0}{\centi\meter} \gls{FWHM} Gaussian filter). Randoms and scatter were not included. Poisson noise was added corresponding to a total number of counts of XXX in time frame XXX.
 % KT some info above
 
         Finally, all data sets were reconstructed using $10$ iterations with $17$ subsets of \gls{OSEM}~\cite{Hudson1994}.
@@ -27,9 +22,9 @@
     % \vspace{-0.5cm}
     
     \subsection{Network Design and Execution} \label{sec:network_design_and_execution}
-        The \gls{NN} used was a modified U-Net~\cite{Weng2015U-Net:Segmentation} with seven down/upsampling stages. Each down or upsampling stage consisted of two convolutional layers (with two, four, eight, $16$, $32$, $64$ or $128$ channels depending on depth) followed by either a split strided convolution and maxpooling layer (with the result concatenated) or a trilinear upsampling layer. Edge padding, group normalisation~\cite{Wu2018GroupNormalization}, MISH activation~\cite{Misra2020Mish:Function} and spatial dropout were used with every convolutional layer. Data was edge padded to the nearest power of two and the input data had Gaussian noised summed to it. Both input and label data were standardised. \gls{MSE} and \gls{TV} were used as the loss function. AdamW~\cite{Loshchilov2017DecoupledRegularization} was used as an optimiser and training continued for all methods until the gradient of the loss function, over a window of previous results, reduced below a threshold. Parameters were tuned using a grid search.
+        The \gls{NN} used was a modified U-Net~\cite{Weng2015U-Net:Segmentation}, with seven down/upsampling stages. Each down/upsampling stage consisted of two convolutional layers (with two, four, eight, $16$, $32$, $64$, or $128$ channels, depending on depth). Followed by, either a split strided convolution and maxpooling layer (with the result concatenated), or a trilinear upsampling layer. Edge padding, group normalisation~\cite{Wu2018GroupNormalization}, MISH activation~\cite{Misra2020Mish:Function}, and spatial dropout, were used with every convolutional layer. Data was edge padded to the nearest power of two, and the input data had Gaussian noised summed to it. Both input and label data were standardised. \gls{MSE} and \gls{TV} were used as the loss function. AdamW~\cite{Loshchilov2017DecoupledRegularization} was used as optimiser. Training continued for all methods until the gradient of the loss function, over a window of previous results, reduced below a threshold. Parameters were tuned using a grid search.
         
-        Two training regimes were explored, one where each time point was treated independently and another where the model weights were saved and then independently updated on each time point before the mean of the new models weights was taken for the next iteration.
+        Two training regimes were explored, one where each time point was treated independently, and another, where the model weights were saved and then independently updated on each time point (the mean of the new models weights was taken for the next iteration).
         
     % \vspace{-0.5cm}
     
@@ -39,42 +34,125 @@
     % \vspace{-0.5cm}
     
     \subsection{Evaluation} \label{sec:evaluation}
-        In addition to the denoising performed in~\Fref{sec:network_design_and_execution}, data were also denoised using \gls{TV} as well as the \gls{DIP} method presented in~\cite{Gong2019PETPrior}.
+        In addition to the denoising performed above%in~\Fref{sec:network_design_and_execution}
+        , data were also denoised using, \gls{TV}, and the \gls{DIP} method presented in~\cite{Gong2019PETPrior}.
         
-        Comparisons used included: 
+        Comparisons used included: A visual analysis, \gls{SSIM} to the ground truth~\cite{Wang2009MeanMeasures}, a \gls{TAC} through a lesion, a profile over a lesion, and \gls{SUV}\textsubscript{max} and \gls{SUV}\textsubscript{peak} (defined following \gls{EANM} guidelines~\cite{Boellaard2015FDG2.0}).
 
 % \vspace{-0.5cm}
 
 \section{Results} \label{sec:results}
-    % \begin{figure}
+    \begin{figure}
         % \vspace{-0.5cm}
         
-    %     \centering
+        \centering
     
-    %     \includegraphics[width=1.0\linewidth]{figures/test.png}    
-    %     \includegraphics[width=1.0\linewidth]{figures/test.png}
+        \includegraphics[width=1.0\linewidth]{figures/visual_analysis.png}    
+        % \includegraphics[width=1.0\linewidth]{figures/visual_analysis.png}
         
         % \vspace{-0.5cm}
         
-    %     \captionsetup{
-    %     \scriptsize
-    %     singlelinecheck=false, justification=centering}
-    %     \caption{caption.}
+        \captionsetup{singlelinecheck=false, justification=centering}
+        \caption{
+        % \scriptsize
+        A visual analysis between the ground truth and denoised results (plus \gls{SSIM} to the ground truth), for; the ground truth, the original noisy data, and this data denoised using, \gls{TV}, the implementation of \gls{DIP} from~\cite{Gong2019PETPrior}, and our new implementation of \gls{DIP}, trained sequentially and combined (taken for the last time point of the lung \gls{FOV}). Colour map ranges are consistent for all images.}
         
-    %     \label{fig:test}
+        \label{fig:visual_analysis}
         
         % \vspace{-0.5cm}
-    % \end{figure}
+    \end{figure}
     
+    \begin{figure}
+        % \vspace{-0.5cm}
+        
+        \centering
     
+        \includegraphics[width=1.0\linewidth]{figures/tac.png}    
+        % \includegraphics[width=1.0\linewidth]{figures/tac.png}
+        
+        % \vspace{-0.5cm}
+        
+        \captionsetup{singlelinecheck=false, justification=centering}
+        \caption{
+        % \scriptsize
+        A \gls{TAC} through a lesion, fit as a third order polynomial regression, with weighting using uncertainty (where available), for; the ground truth, the original noisy data, and this data denoised using, \gls{TV}, the implementation of \gls{DIP} from~\cite{Gong2019PETPrior}, and our new implementation of \gls{DIP}, trained sequentially and combined, both with and without uncertainty (taken for the lung \gls{FOV}).}
+        
+        \label{fig:tac}
+        
+        % \vspace{-0.5cm}
+    \end{figure}
+    
+        \begin{figure}
+        % \vspace{-0.5cm}
+        
+        \centering
+    
+        \includegraphics[width=1.0\linewidth]{figures/profile.png}    
+        % \includegraphics[width=1.0\linewidth]{figures/profile.png}
+        
+        % \vspace{-0.5cm}
+        
+        \captionsetup{singlelinecheck=false, justification=centering}
+        \caption{
+        % \scriptsize
+        A profile through a lesion, in the \gls{SI} direction, for; the ground truth, the original noisy data, and this data denoised using, \gls{TV}, the implementation of \gls{DIP} from~\cite{Gong2019PETPrior}, and our new implementation of \gls{DIP}, trained sequentially and combined (taken for the last time point of the lung \gls{FOV}).}
+        
+        \label{fig:profile}
+        
+        % \vspace{-0.5cm}
+    \end{figure}
+    
+    \begin{table}
+        % \vspace{-0.5cm}
+        
+        \centering
+        
+        \captionsetup{singlelinecheck=false, justification=centering}
+        \caption{
+        % \tiny
+        Comparison of \acrshort{SUV}\textsubscript{max} and \acrshort{SUV}\textsubscript{peak}, for; the ground truth, the original noisy data, and this data denoised using, \gls{TV}, the implementation of \gls{DIP} from~\cite{Gong2019PETPrior}, and our new implementation of \gls{DIP}, trained sequentially and combined (taken for the last time point of the lung \gls{FOV}).}
+        
+        % \vspace{-0.5cm}
+        
+        \resizebox*{1.0\linewidth}{!}
+        % \resizebox*{1.0\linewidth}{!}
+        {
+            \begin{tabular}{||c|cc||}
+                \hline
+                \textbf{\acrshort{SUV}}             & \textbf{Max}  & \textbf{Peak} \\
+                \hline
+                \textbf{Ground Truth}               & $12.3$        & $9.53$ \\
+                \hline
+                \textbf{Noisy}                      & $21.5$        & $5.99$ \\
+                \hline
+                \textbf{\gls{TV}}                   & $3.28$        & $6.24$ \\
+                \textbf{Original \gls{DIP}}         & $3.90$        & $6.93$ \\
+                \hline
+                \textbf{New \gls{DIP} Sequential}   & $9.19$        & $8.02$ \\
+                \textbf{New \gls{DIP} Combined}     & $9.27$        & $8.21$ \\
+                \hline
+            \end{tabular}
+        }
+        \label{tab:suv}
+        
+        % \vspace{-0.5cm}
+    \end{table}
+    
+    A visual comparison of the reconstructed images (see~\Fref{fig:visual_analysis}), shows that both of the new \gls{DIP} methods perform comparably, if not for a slight reduction in noise in the combined case. Whereas, the \gls{TV} and original \gls{DIP} implementations appear to have struggled with, over smoothing, reducing the contrast of the lesions, and introducing some edge artefacts.
+    
+    The overall shape of the \gls{TAC} (see~\Fref{fig:tac}) for the new \gls{DIP} combined method appears, most similar to the ground truth, however, with a slight reduction in quantification. The sequential method is less accurate, but still more so than both the original \gls{DIP} and \gls{TV} methods. There is significant variation in the noise \gls{TAC}, somewhat masked by the regression, however, its shape is still least like the ground truth. Adding uncertainty appears to have improved the \gls{TAC} of the new \gls{DIP} sequential method, however, the uncertainty of the combined method is less, and as such, the inclusion of uncertainty has not affected results significantly.
+    
+    The peak of the profile (see~\Fref{fig:profile}) for both new \gls{DIP} methods is comparable, and greater than both the original \gls{DIP} and \gls{TV} methods. The peak of the noise profile is greater than all other methods, including the ground truth, however, this is not necessarily beneficial, as can be seen by the rest of the profile not closely following the ground truth (it undulates unpredictably). The profile for both new \gls{DIP} methods are significantly smoother, and more closely follow the ground truth.
+     
+    \acrshort{SUV} (and \acrshort{SSIM}) results confirm the above (see~\Fref{tab:suv}).
 
 % \vspace{-0.5cm}
 
 \section{Discussion and Conclusions} \label{sec:discussion_and_conclusions}
-    XXXSome discussion of results here.
+    % XXXSome discussion of results here.
 
-    Results presented here were obtained on a single bed position. Initial evaluation on a bed position centred on the liver indicated that parameter fine-tuning depending on the distribution and count level will be beneficial. Evaluation with patient data will follow.
+    Results presented here were obtained on a single bed position. Initial evaluation on a bed position, centred on the liver, indicated that parameter fine-tuning, depending on the distribution and count level, will be beneficial. Evaluation with patient data will follow.
     
-    The uncertainty estimates produced by the \gls{NN} need to validated by comparison with results obtained from repeated noise realisations.
+    The uncertainty estimates produced by the \gls{NN} need to be validated by comparison with results obtained from repeated noise realisations.
     
-    %In the future, research will focus on the application of the method to domains other than dynamic \gls{PET}, where \gls{4D} data exists, such as \gls{MC}.
+    % In the future, research will focus on the application of the method to domains other than dynamic \gls{PET}, where \gls{4D} data exists, such as \gls{MC}.
