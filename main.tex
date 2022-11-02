@@ -2,21 +2,21 @@
 \IEEEoverridecommandlockouts
 
 \usepackage[activate={true, nocompatibility}, final, tracking=true, kerning=true, spacing=true, factor=1100, stretch=10, shrink=10]{microtype}
-\linespread{0.92}
+% \linespread{0.92}
 
-% \makeatletter
-% \def\mycopyrightnotice{
-%   {\footnotesize
-%   \begin{minipage}{\textwidth}
-%   \centering
-%   978-1-6654-2113-3/21/\$31.00 \copyright2021 IEEE
-%   \end{minipage}
-%   }
-% }
-% \def\ps@IEEEtitlepagestyle{
-%   \def\@oddfoot{\mycopyrightnotice}
-%   \def\@evenfoot{}
-% }
+\makeatletter
+\def\mycopyrightnotice{
+  {\footnotesize
+  \begin{minipage}{\textwidth}
+  \centering
+  978-1-6654-2113-3/21/\$31.00 \copyright2021 IEEE
+  \end{minipage}
+  }
+}
+\def\ps@IEEEtitlepagestyle{
+  \def\@oddfoot{\mycopyrightnotice}
+  \def\@evenfoot{}
+}
 
 \ifCLASSINFOpdf
    \usepackage[pdftex]{graphicx}
@@ -64,7 +64,7 @@
 \begin{document}
 
 \title{
-    \vspace{-0.75cm}
+    % \vspace{-0.75cm}
 
     Pseudo-Bayesian DIP Denoising as a Preprocessing Step for Kinetic Modelling in Dynamic PET
 }
@@ -73,7 +73,7 @@
 \pagenumbering{gobble}
 
 \author{
-    \vspace{-0.4cm}
+    % \vspace{-0.4cm}
     
     \IEEEauthorblockN{
         Alexander~C.~Whitehead~\IEEEauthorrefmark{1}~\IEEEauthorrefmark{2},
@@ -99,7 +99,7 @@
     \IEEEauthorblockA{
         \IEEEauthorrefmark{4}
         \textit{Molecular Imaging and Computed Tomography Engineering, GE Healthcare, USA}
-        \vspace{-0.75cm}
+        % \vspace{-0.75cm}
     }
 
     % \thanks{Manuscript received November 29, 2021.}
@@ -117,13 +117,13 @@
     Many methods have been proposed to alleviate the worst annoyances of noise, however, not many take into account the temporal nature of dynamically acquired PET. Here, we propose an adaption of a method, which has seen increasing attention in more traditional imaging denoising circles. Deep Image Prior exploits the initialisation of a carefully designed neural network, so as to treat it as a bank of custom filters, which are to be trained and used afresh on each new image, independently. Deep Image Prior has seen adaptation to PET previously (including dynamic PET), however, many of these adaptations do not take into account the large memory requirements of the method. Additionally, most previous work does not address the main weakness of the Deep Image Prior, its stopping criteria. Here, we propose a method which is both memory efficient, and includes a smoothing regularisation. In addition, we provide uncertainty estimates by incorporating a Bayesian approximation (using dropout), and prototype a training scheme by which the model is fit on all data simultaneously. The denoised images are then used as input for kinetic modelling. To evaluate the method, dynamic XCAT simulations have been produced, with a field of view of the lung and liver. The results of the new methods (along with total variation and the old Deep Image Prior) have been compared by; a visual analysis, SSIM, and $K_i$ values. Results indicate that the new methods potentially outperform the old methods, without increasing computation time, while reducing system requirements.
 \end{abstract}
 
-\vspace{-0.5cm}
+% \vspace{-0.5cm}
 
 \input{body}
 
 \AtNextBibliography{
-    \scriptsize
-    % \small
+    % \scriptsize
+    \small
 }
 \printbibliography
 
