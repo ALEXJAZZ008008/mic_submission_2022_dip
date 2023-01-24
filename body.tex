@@ -1,4 +1,4 @@
-\section{Introduction} \label{sec:introduction}
+\section{INTRODUCTION} \label{sec:introduction}
     \IEEEPARstart{M}{ost} \acrlong{ML} or \gls{NN} based methods, rely upon a workflow where a model is designed, trained, validated, and deployed~\cite{Krose2011AnNetworks}. %This is logical as the intention with \gls{NN} based methods is to treat them as a general function approximator~\cite{Krose2011AnNetworks}. This is where the function is determined by the relationship between the data used and the objective or loss function. 
     However, in the domain of image denoising, the \gls{DIP} method has received attention as training and inference are performed independently on each new image~\cite{Ulyanov2018DeepPrior}. %The \gls{DIP} method could be considered to be a custom learnt bank of filters for each input. In order to prevent overfitting, the number of iterations used is imperative.% The authors of the original \gls{DIP} paper argue that the method could be considered to be used to solve many inverse problems~\cite{Ulyanov2018DeepPrior}.
     
@@ -8,7 +8,7 @@
 
 % \vspace{-0.4cm}
     
-\section{Methods}\label{sec:methods}
+\section{METHODS}\label{sec:methods}
     \subsection{Network Design and Execution} \label{sec:network_design_and_execution}
         Firstly, we reduced \acrshort{GPU} memory requirements. Because \gls{DIP} requires training at inference, the full amount of memory is needed every time the method is used. To aid in clinical adoption, a hard limit of \SI{8.0}{\giga\byte} \acrshort{GPU} memory was imposed. Secondly, a more robust stopping criteria is required. %The stopping criteria should be flexible so as to allow the method to correct a wider variety of inputs. 
         % One method would be, to look at a window of previous loss function values, and exit, when the gradient of this drops below a tolerance.
@@ -44,7 +44,7 @@
 
 % \vspace{-0.5cm}
 
-\section{Results} \label{sec:results}
+\section{RESULTS} \label{sec:results}
     \begin{figure}
         % \vspace{-0.5cm}
         
@@ -174,7 +174,7 @@
 
 % \vspace{-0.4cm}
 
-\section{Discussion and Conclusions} \label{sec:discussion_and_conclusions}
+\section{DISCUSSION AND CONCLUSION} \label{sec:discussion_and_conclusion}
     % XXXSome discussion of results here.
 
     Evaluation indicated that the new \gls{DIP} method, particularly when trained combined, provided images with less noise and more quantitative accuracy than other methods. The combined method had lower uncertainty.
